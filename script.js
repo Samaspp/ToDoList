@@ -1,6 +1,7 @@
 const inbox= document.getElementById("inbox"); 
 const list= document.getElementById("list");
 
+inbox.focus();
 function addTask(){ 
     if(inbox.value===''){
         alert("write something");
@@ -16,6 +17,12 @@ function addTask(){
     inbox.value=null;
  saveData();
 }
+
+inbox.addEventListener('keyup', function(event) {
+    if(event.key === 'Enter'){
+        addTask();
+    }
+});
 
 list.addEventListener("click",function(e){
     if(e.target.tagName ==="LI"){
