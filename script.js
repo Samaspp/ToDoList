@@ -46,30 +46,70 @@ list.addEventListener("click",function(e){
     }
 }, false);
 
+var oldTaskElement = "";
 
 function editTask(taskElement) {
    
+    if(oldTaskElement === ""){
+      oldTaskElement = taskElement;
+    }else{
+      const xInput = oldTaskElement.querySelector("input");
+        var text = xInput.value;
+        if (xInput) {
+          xInput.remove();
+        }
+        oldTaskElement.textContent = text;
+  
+        let img=document.createElement("img");
+        img.src="images/icons8-edit-50.png";
+        oldTaskElement.appendChild(img);
+   
+        let span=document.createElement("span");
+        span.innerHTML= "\u00d7"; //the into sign for deletion of tasks
+        oldTaskElement.appendChild(span);
+        saveData();
+        oldTaskElement = taskElement
+    }
     const xSpan = taskElement.querySelector("span");
     if (xSpan) {
       xSpan.remove();
     }
-
-    const input = document.createElement("input");
+    const xImg = taskElement.querySelector("img");
+    if (xImg) {
+      xImg.remove();
+    }
     const edittext = taskElement.textContent;
-   
-    input.type = "text";
-    input.value = edittext;
     
-    input.focus();
+    taskElement.innerHTML = "";
+
+    var input = document.createElement("input");
+    input.type = "text";
+    input.id = "task";
+    input.value = edittext;
+    taskElement.appendChild(input);
+
+    //taskElement.appendChild(input);
+
+    const task= document.getElementById("task"); 
+    //input.value = edittext;
+    task.focus();
    
-  
     input.addEventListener("keyup", (event) => {
       if (event.key === "Enter") {
        
+        const xInput = taskElement.querySelector("input");
+        var text = xInput.value;
+        if (xInput) {
+          xInput.remove();
+        }
+        taskElement.textContent = text;
+        
+        if(taskElement == oldTaskElement){
+          oldTaskElement = "";
+          inbox.focus();
+        }
 
-     taskElement.textContent = input.value;
-
-     let img=document.createElement("img");
+        let img=document.createElement("img");
         img.src="images/icons8-edit-50.png";
         taskElement.appendChild(img);
    
@@ -79,9 +119,6 @@ function editTask(taskElement) {
         saveData();
       }
     });
-  
-    taskElement.innerHTML = "";
-    taskElement.appendChild(input);
   }
 
 
