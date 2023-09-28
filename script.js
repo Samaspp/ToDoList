@@ -1,13 +1,14 @@
 const inbox= document.getElementById("inbox"); 
 const list= document.getElementById("list");
-
+var previousTaskElement="";
 
 
 inbox.focus();
 function addTask(){ 
     if(inbox.value===''){
-        alert("write something");
+        alert("Invalid entry. Try again.");
     }
+
     else{
         let task =document.createElement("li");
         task.innerHTML=inbox.value;
@@ -39,6 +40,7 @@ list.addEventListener("click",function(e){
       else if(e.target.tagName ==="SPAN"){
       e.target.parentElement.remove();
       saveData();
+      inbox.focus();
     }
     else  if(e.target.tagName==="IMG"){
         editTask(e.target.parentElement);
@@ -47,29 +49,84 @@ list.addEventListener("click",function(e){
 }, false);
 
 
+
 function editTask(taskElement) {
+
+if(previousTaskElement=== ""){             //first time editing a task
+    previousTaskElement=taskElement;  
+}
+
+else{                                                                  //already in the middle of editing a  task 
+  const xInput= previousTaskElement.querySelector("input");
+  
+  var text= xInput.value;
+  if(xInput){
+  xInput.remove();
+  }
+console.log("hello");
+  previousTaskElement.textContent= text;
+
+  let img=document.createElement("img");
+        img.src="images/icons8-edit-50.png";
+        previousTaskElement.appendChild(img);
    
+  let span=document.createElement("span");
+        span.innerHTML= "\u00d7"; 
+        previousTaskElement.appendChild(span);
+
+  previousTaskElement=taskElement;
+}
+
+  
     const xSpan = taskElement.querySelector("span");
     if (xSpan) {
       xSpan.remove();
     }
 
-    const input = document.createElement("input");
-    const edittext = taskElement.textContent;
+    const xImg = taskElement.querySelector("img");
+    if (xImg) {
+      xImg.remove();
+    }
+
+    const newTask=taskElement.textContent;
+    console.log(newTask);
    
-    input.type = "text";
-    input.value = edittext;
-    
-    input.focus();
+ 
+    var input= document.createElement("input");
+    input.type="text";
+    input.id="task";
+    input.value=newTask;
+    taskElement.innerHTML= "";   
+    taskElement.appendChild(input);
+    console.log(taskElement);
+    const task=document.getElementById("task");
+    task.focus();
    
-  
+   //editing happens here
+   let span=document.createElement("span");
+        span.innerHTML= "\u00d7"; 
+        taskElement.appendChild(span);
+        saveData();
+
     input.addEventListener("keyup", (event) => {
-      if (event.key === "Enter") {
-       
+     if (event.key === "Enter") {
 
-     taskElement.textContent = input.value;
+      const xInput= taskElement.querySelector("input");
+      var text= xInput.value;
+      if(xInput){
+    xInput.remove();
+  }
 
-     let img=document.createElement("img");
+  taskElement.textContent= text;
+
+  if(taskElement===previousTaskElement)
+  {
+    previousTaskElement="";
+    inbox.focus();
+  }
+      
+    
+       let img=document.createElement("img");
         img.src="images/icons8-edit-50.png";
         taskElement.appendChild(img);
    
@@ -79,13 +136,7 @@ function editTask(taskElement) {
         saveData();
       }
     });
-  
-    taskElement.innerHTML = "";
-    taskElement.appendChild(input);
   }
-
-
-
 function saveData(){
     localStorage.setItem("data",list.innerHTML);
 }
