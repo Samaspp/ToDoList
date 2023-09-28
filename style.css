@@ -43,14 +43,13 @@
     
 }
 
-.inbox {
+input{
     flex:1;
     border: none;
     outline: none;
     background: transparent;
-    padding: 12px 8px 12px 35px;
+    padding:20px;
     font-weight: 14px;
-    font-size: 14px;
     color: #7691cf;
 }
 
@@ -89,22 +88,6 @@ ul li::before {
     left: 8px;
 }
 
-
-
-ul li img{
-    content: ' ';
-    position:absolute;
-    height: 28px;
-    width:28px;
-    border-radius: 50%;
-    background-image: url("images/icons8-edit-50.png");
-    
-    background-size: cover;
-    background-position: center;
-    top: 10px;
-    right: 50px;
-}
-
 ul li.checked{
     color: #93A5CF;
     text-decoration: line-through;
@@ -114,7 +97,6 @@ ul li.checked::before{
     background-image: url("images/icons8-blue-tick-40.png");
     
 }
-
 
 ul li span{
     position: absolute;
@@ -133,14 +115,3 @@ ul li span:hover{
     background: #ebf3fb;
   
 }
-
-input {
-    flex:1;
-    border: none;
-    outline: none;
-    background: transparent;
-    list-style: none;
-    color: #93A5CF;
-    font-size: 17px; 
-}
-
