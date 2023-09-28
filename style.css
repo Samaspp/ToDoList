@@ -89,25 +89,20 @@ ul li::before {
     left: 8px;
 }
 
+
+
 ul li img{
     content: ' ';
     position:absolute;
-    height: 22px;
-    width:22px;
-    opacity: 65%;
+    height: 28px;
+    width:28px;
+    border-radius: 50%;
     background-image: url("images/icons8-edit-50.png");
     
     background-size: cover;
     background-position: center;
-    top: 15px;
+    top: 10px;
     right: 50px;
-}
-
-ul li img:hover{
-    transform: scale(1.03);
-    opacity: 80%;
-    transition: 0.3s ease;
-
 }
 
 ul li.checked{
@@ -117,13 +112,14 @@ ul li.checked{
 
 ul li.checked::before{
     background-image: url("images/icons8-blue-tick-40.png");
-   
+    
 }
+
 
 ul li span{
     position: absolute;
     right:0;
-    top:7px;
+    top:5px;
     width: 40px;
     height: 40px;
     font-size: 22px;
@@ -134,15 +130,12 @@ ul li span{
 }
 
 ul li span:hover{
-    background: #f0f6fd;
-    transition: background-color 0.3s ease;
-    transform: scale(1.2);
+    background: #ebf3fb;
   
 }
 
 input {
     flex:1;
-    width: 100%;
     border: none;
     outline: none;
     background: transparent;
