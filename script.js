@@ -113,7 +113,7 @@ console.log("hello");
          if(xInput.value===''){
             alert("Invalid entry. Try again.");
         }
-    
+     
       else{
       if(xInput){
     xInput.remove();
@@ -138,7 +138,7 @@ console.log("hello");
         taskElement.appendChild(span);
         saveData();
     
-    });
+}}});
   }
 function saveData(){
     localStorage.setItem("data",list.innerHTML);
