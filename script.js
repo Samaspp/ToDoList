@@ -1,13 +1,17 @@
 const inbox = document.getElementById('inbox')
 const list = document.getElementById('list')
 let previousTaskElement = ''
+const EDIT_IMG_NAME = 'icons8-edit-50.png'
+const EDIT_IMG_PATH = `images/${EDIT_IMG_NAME}`
+const CLOSE_BUTTON_CODE = '\u00d7'
+const LOCAL_STORAGE_KEY = 'data'
 
 inbox.focus()
 
 function addTask () {
   const task = document.createElement('li')
-  const img = document.createElement('img')
-  const span = document.createElement('span')
+  const editIcon = document.createElement('img')
+  const deleteButton = document.createElement('span')
 
   if (inbox.value === '') {
     alert('Invalid entry. Try again.')
@@ -15,11 +19,11 @@ function addTask () {
     task.innerHTML = inbox.value
     list.appendChild(task)
 
-    img.src = 'images/icons8-edit-50.png'
-    task.appendChild(img)
+    editIcon.src = EDIT_IMG_PATH
+    task.appendChild(editIcon)
 
-    span.innerHTML = '\u00d7'
-    task.appendChild(span)
+    deleteButton.innerHTML = CLOSE_BUTTON_CODE
+    task.appendChild(deleteButton)
   }
   inbox.value = null
   saveData()
@@ -47,66 +51,67 @@ addEventListener('click', function (e) {
 }, false)
 
 function editTask (taskElement) {
-  const img = document.createElement('img')
-  const span = document.createElement('span')
-  const xSpan = taskElement.querySelector('span')
-  const xImg = taskElement.querySelector('img')
-  const input = document.createElement('input')
+  const editIcon = document.createElement('img')
+  const deleteButton = document.createElement('span')
+  const xDeleteButton = taskElement.querySelector('span')
+  const xEditIcon = taskElement.querySelector('img')
+  const inputFieldForEdit = document.createElement('input')
+  let xInputFieldForEdit = null
 
   if (previousTaskElement === '') {
     previousTaskElement = taskElement
   } else {
-    const xInput = previousTaskElement.querySelector('input')
-    const text = xInput.value
-    const img = document.createElement('img')
-    const span = document.createElement('span')
+    xInputFieldForEdit = previousTaskElement.querySelector('input')
+    const text = xInputFieldForEdit.value
+    const editIcon = document.createElement('img')
+    const deleteButton = document.createElement('span')
 
-    if (xInput) {
-      xInput.remove()
+    if (xInputFieldForEdit) {
+      xInputFieldForEdit.remove()
     }
     previousTaskElement.textContent = text
 
-    img.src = 'images/icons8-edit-50.png'
-    previousTaskElement.appendChild(img)
+    editIcon.src = EDIT_IMG_PATH
+    previousTaskElement.appendChild(editIcon)
 
-    span.innerHTML = '\u00d7'
-    previousTaskElement.appendChild(span)
+    deleteButton.innerHTML = CLOSE_BUTTON_CODE
+    previousTaskElement.appendChild(deleteButton)
 
     previousTaskElement = taskElement
   }
 
-  if (xSpan) {
-    xSpan.remove()
+  if (xDeleteButton) {
+    xDeleteButton.remove()
   }
 
-  if (xImg) {
-    xImg.remove()
+  if (xEditIcon) {
+    xEditIcon.remove()
   }
 
   const newTask = taskElement.textContent
 
-  input.type = 'text'
-  input.id = 'task'
-  input.value = newTask
+  inputFieldForEdit.type = 'text'
+  inputFieldForEdit.id = 'task'
+  inputFieldForEdit.value = newTask
   taskElement.innerHTML = ''
-  taskElement.appendChild(input)
-  span.innerHTML = '\u00d7'
-  taskElement.appendChild(span)
+  taskElement.appendChild(inputFieldForEdit)
+  deleteButton.innerHTML = CLOSE_BUTTON_CODE
+  taskElement.appendChild(deleteButton)
   saveData()
 
   const task = document.getElementById('task')
   task.focus()
 
-  input.addEventListener('keyup', (event) => {
+  inputFieldForEdit.addEventListener('keyup', (event) => {
+    const newInputFieldDuringEdit = taskElement.querySelector('input')
     if (event.key === 'Enter') {
-      const xInput = taskElement.querySelector('input')
-      const text = xInput.value
+      const text = newInputFieldDuringEdit.value
 
-      if (xInput.value === '') {
+      if (newInputFieldDuringEdit.value === '') {
         alert('Invalid entry. Try again.')
       } else {
-        if (xInput) {
-          xInput.remove()
+        if (newInputFieldDuringEdit) {
+          newInputFieldDuringEdit.remove()
         }
 
         taskElement.textContent = text
@@ -116,11 +121,11 @@ function editTask (taskElement) {
           inbox.focus()
         }
 
-        img.src = 'images/icons8-edit-50.png'
-        taskElement.appendChild(img)
+        editIcon.src = EDIT_IMG_PATH
+        taskElement.appendChild(editIcon)
 
-        span.innerHTML = '\u00d7'
-        taskElement.appendChild(span)
+        deleteButton.innerHTML = CLOSE_BUTTON_CODE
+        taskElement.appendChild(deleteButton)
 
         saveData()
       }
@@ -128,11 +133,11 @@ function editTask (taskElement) {
   })
 }
 function saveData () {
-  localStorage.setItem('data', list.innerHTML)
+  localStorage.setItem(LOCAL_STORAGE_KEY, list.innerHTML)
 }
 
 function showTask () {
-  list.innerHTML = localStorage.getItem('data')
+  list.innerHTML = localStorage.getItem(LOCAL_STORAGE_KEY)
 }
 showTask()
 localStorage.clear()
