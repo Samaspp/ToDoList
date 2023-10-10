@@ -57,8 +57,8 @@ function editTask (taskElement) {
   const taskEditIcon = taskElement.querySelector('img')
   const taskInput = document.createElement('input')
   let xtaskInput = null
-  const previousEditIcon = createDeleteButton()
-  const previousDeleteButton = document.createElement('button')
+  const previousEditIcon = document.createElement('img')
+  const previousDeleteButton = createDeleteButton()
 
   if (previousTaskElement === '') {
     previousTaskElement = taskElement
@@ -74,7 +74,6 @@ function editTask (taskElement) {
     previousEditIcon.src = EDIT_IMG_PATH
     previousTaskElement.appendChild(previousEditIcon)
 
-    previousDeleteButton.innerHTML = CLOSE_BUTTON_CODE
     previousTaskElement.appendChild(previousDeleteButton)
 
     previousTaskElement = taskElement
@@ -95,7 +94,6 @@ function editTask (taskElement) {
   taskInput.value = newTask
   taskElement.innerHTML = ''
   taskElement.appendChild(taskInput)
-  newdeleteBtn.innerHTML = CLOSE_BUTTON_CODE
   taskElement.appendChild(newdeleteBtn)
   saveData()
 
@@ -124,7 +122,6 @@ function editTask (taskElement) {
         newEditIcon.src = EDIT_IMG_PATH
         taskElement.appendChild(newEditIcon)
 
-        newdeleteBtn.innerHTML = CLOSE_BUTTON_CODE
         taskElement.appendChild(newdeleteBtn)
 
         saveData()
