@@ -1,143 +1,147 @@
-const inbox = document.getElementById("inbox");
-const list = document.getElementById("list");
-let previousTaskElement = "";
+const inbox = document.getElementById('inbox')
+const list = document.getElementById('list')
+let previousTaskElement = ''
+const EDIT_IMG_NAME = 'icons8-edit-50.png'
+const EDIT_IMG_PATH = `images/${EDIT_IMG_NAME}`
+const CLOSE_BUTTON_CODE = '\u00d7'
+const LOCAL_STORAGE_KEY = 'data'
 
-inbox.focus();
-function addTask() {
-  if (inbox.value === "") {
-    alert("Invalid entry. Try again.");
+inbox.focus()
+
+function addTask () {
+  const task = document.createElement('li')
+  const editIcon = document.createElement('img')
+  const deleteButton = createDeleteButton()
+
+  if (inbox.value === '') {
+    alert('Invalid entry. Try again.')
   } else {
-    const task = document.createElement("li");
-    task.innerHTML = inbox.value;
-    list.appendChild(task);
+    task.innerHTML = inbox.value
+    list.appendChild(task)
 
-    const img = document.createElement("img");
-    img.src = "images/icons8-edit-50.png";
-    task.appendChild(img);
+    editIcon.src = EDIT_IMG_PATH
+    task.appendChild(editIcon)
 
-    const span = document.createElement("span");
-    span.innerHTML = "\u00d7"; //the into sign for deletion of tasks
-    task.appendChild(span);
+    task.appendChild(deleteButton)
   }
-  inbox.value = null;
-  saveData();
+  inbox.value = null
+  inbox.focus()
+  saveData()
 }
 
-inbox.addEventListener("keyup", function (event) {
-  if (event.key === "Enter") {
-    addTask();
+inbox.addEventListener('keyup', function (event) {
+  if (event.key === 'Enter') {
+    addTask()
   }
-});
+})
 
-list.addEventListener(
-  "click",
-  function (e) {
-    if (e.target.tagName === "LI") {
-      e.target.classList.toggle("checked");
-      saveData();
-      inbox.focus();
-    } else if (e.target.tagName === "SPAN") {
-      e.target.parentElement.remove();
-      saveData();
-      inbox.focus();
-    } else if (e.target.tagName === "IMG") {
-      editTask(e.target.parentElement);
-      saveData();
-    }
-  },
-  false
-);
+addEventListener('click', function (e) {
+  if (e.target.tagName === 'LI') {
+    e.target.classList.toggle('checked')
+    saveData()
+    inbox.focus()
+  } else if (e.target.id.startsWith('delete-')) {
+    e.target.parentElement.remove()
+    saveData()
+    inbox.focus()
+  } else if (e.target.tagName === 'IMG') {
+    editTask(e.target.parentElement)
+    saveData()
+  }
+}, false)
 
-function editTask(taskElement) {
-  if (previousTaskElement === "") {
-    //first time editing a task
-    previousTaskElement = taskElement;
+function editTask (taskElement) {
+  const newEditIcon = document.createElement('img')
+  const newdeleteBtn = createDeleteButton()
+  const taskDeleteBtn = taskElement.querySelector('button')
+  const taskEditIcon = taskElement.querySelector('img')
+  const taskInput = document.createElement('input')
+  let xtaskInput = null
+  const previousEditIcon = document.createElement('img')
+  const previousDeleteButton = createDeleteButton()
+
+  if (previousTaskElement === '') {
+    previousTaskElement = taskElement
   } else {
-    //already in the middle of editing a  task
-    const xInput = previousTaskElement.querySelector("input");
+    xtaskInput = previousTaskElement.querySelector('input')
+    const text = xtaskInput.value
 
-    let text = xInput.value;
-    if (xInput) {
-      xInput.remove();
+    if (xtaskInput) {
+      xtaskInput.remove()
     }
-    console.log("hello");
-    previousTaskElement.textContent = text;
+    previousTaskElement.textContent = text
 
-    const img = document.createElement("img");
-    img.src = "images/icons8-edit-50.png";
-    previousTaskElement.appendChild(img);
+    previousEditIcon.src = EDIT_IMG_PATH
+    previousTaskElement.appendChild(previousEditIcon)
 
-    const span = document.createElement("span");
-    span.innerHTML = "\u00d7";
-    previousTaskElement.appendChild(span);
+    previousTaskElement.appendChild(previousDeleteButton)
 
-    previousTaskElement = taskElement;
+    previousTaskElement = taskElement
   }
 
-  const xSpan = taskElement.querySelector("span");
-  if (xSpan) {
-    xSpan.remove();
+  if (taskDeleteBtn) {
+    taskDeleteBtn.remove()
   }
 
-  const xImg = taskElement.querySelector("img");
-  if (xImg) {
-    xImg.remove();
+  if (taskEditIcon) {
+    taskEditIcon.remove()
   }
 
-  let newTask = taskElement.textContent;
+  const newTask = taskElement.textContent
 
-  const input = document.createElement("input");
-  input.type = "text";
-  input.id = "task";
-  input.value = newTask;
-  taskElement.innerHTML = "";
-  taskElement.appendChild(input);
-  const task = document.getElementById("task");
-  task.focus();
+  taskInput.type = 'text'
+  taskInput.id = 'task'
+  taskInput.value = newTask
+  taskElement.innerHTML = ''
+  taskElement.appendChild(taskInput)
+  taskElement.appendChild(newdeleteBtn)
+  saveData()
 
-  //editing happens here
-  const span = document.createElement("span");
-  span.innerHTML = "\u00d7";
-  taskElement.appendChild(span);
-  saveData();
+  const task = document.getElementById('task')
+  task.focus()
 
-  input.addEventListener("keyup", (event) => {
-    if (event.key === "Enter") {
-      const xInput = taskElement.querySelector("input");
-      let text = xInput.value;
-      if (xInput.value === "") {
-        alert("Invalid entry. Try again.");
+  taskInput.addEventListener('keyup', (event) => {
+    const newInputFieldDuringEdit = taskElement.querySelector('input')
+    if (event.key === 'Enter') {
+      const text = newInputFieldDuringEdit.value
+
+      if (newInputFieldDuringEdit.value === '') {
+        alert('Invalid entry. Try again.')
       } else {
-        if (xInput) {
-          xInput.remove();
+        if (newInputFieldDuringEdit) {
+          newInputFieldDuringEdit.remove()
         }
 
-        taskElement.textContent = text;
+        taskElement.textContent = text
 
         if (taskElement === previousTaskElement) {
-          previousTaskElement = "";
-          inbox.focus();
+          previousTaskElement = ''
+          inbox.focus()
         }
 
-        const img = document.createElement("img");
-        img.src = "images/icons8-edit-50.png";
-        taskElement.appendChild(img);
+        newEditIcon.src = EDIT_IMG_PATH
+        taskElement.appendChild(newEditIcon)
 
-        const span = document.createElement("span");
-        span.innerHTML = "\u00d7"; //the into sign for deletion of tasks
-        taskElement.appendChild(span);
-        saveData();
+        taskElement.appendChild(newdeleteBtn)
+
+        saveData()
       }
     }
-  });
-}
-function saveData() {
-  localStorage.setItem("data", list.innerHTML);
+  })
 }
 
-function showTask() {
-  list.innerHTML = localStorage.getItem("data");
+function createDeleteButton () {
+  const dltButton = document.createElement('button')
+  dltButton.innerHTML = CLOSE_BUTTON_CODE
+  dltButton.id = 'delete-' + Date.now()
+  return dltButton
 }
-showTask();
+function saveData () {
+  localStorage.setItem(LOCAL_STORAGE_KEY, list.innerHTML)
+}
 
-localStorage.clear();
+function showTask () {
+  list.innerHTML = localStorage.getItem(LOCAL_STORAGE_KEY)
+}
+showTask()
+localStorage.clear()

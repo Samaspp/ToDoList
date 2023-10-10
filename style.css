@@ -120,8 +120,9 @@ ul li.checked::before{
    
 }
 
-ul li span{
+ul li button{
     position: absolute;
+    background: #fff;
     right:0;
     top:7px;
     width: 40px;
@@ -129,11 +130,12 @@ ul li span{
     font-size: 22px;
     color: #93A5CF;
     line-height: 40px;
+    padding: 0px 0px;
     text-align: center;
     border-radius: 50%;
 }
 
-ul li span:hover{
+ul li button:hover{
     background: #f0f6fd;
     transition: background-color 0.3s ease;
     transform: scale(1.2);
