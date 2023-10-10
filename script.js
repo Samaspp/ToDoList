@@ -11,7 +11,7 @@ inbox.focus()
 function addTask () {
   const task = document.createElement('li')
   const editIcon = document.createElement('img')
-  const deleteButton = document.createElement('span')
+  const deleteButton = createDeleteButton()
 
   if (inbox.value === '') {
     alert('Invalid entry. Try again.')
@@ -22,10 +22,10 @@ function addTask () {
     editIcon.src = EDIT_IMG_PATH
     task.appendChild(editIcon)
 
-    deleteButton.innerHTML = CLOSE_BUTTON_CODE
     task.appendChild(deleteButton)
   }
   inbox.value = null
+  inbox.focus()
   saveData()
 }
 
@@ -40,7 +40,7 @@ addEventListener('click', function (e) {
     e.target.classList.toggle('checked')
     saveData()
     inbox.focus()
-  } else if (e.target.tagName === 'SPAN') {
+  } else if (e.target.id.startsWith('delete-')) {
     e.target.parentElement.remove()
     saveData()
     inbox.focus()
@@ -51,58 +51,58 @@ addEventListener('click', function (e) {
 }, false)
 
 function editTask (taskElement) {
-  const editIcon = document.createElement('img')
-  const deleteButton = document.createElement('span')
-  const xDeleteButton = taskElement.querySelector('span')
-  const xEditIcon = taskElement.querySelector('img')
-  const inputFieldForEdit = document.createElement('input')
-  let xInputFieldForEdit = null
+  const newEditIcon = document.createElement('img')
+  const newdeleteBtn = createDeleteButton()
+  const taskDeleteBtn = taskElement.querySelector('button')
+  const taskEditIcon = taskElement.querySelector('img')
+  const taskInput = document.createElement('input')
+  let xtaskInput = null
+  const previousEditIcon = createDeleteButton()
+  const previousDeleteButton = document.createElement('button')
 
   if (previousTaskElement === '') {
     previousTaskElement = taskElement
   } else {
-    xInputFieldForEdit = previousTaskElement.querySelector('input')
-    const text = xInputFieldForEdit.value
-    const editIcon = document.createElement('img')
-    const deleteButton = document.createElement('span')
+    xtaskInput = previousTaskElement.querySelector('input')
+    const text = xtaskInput.value
 
-    if (xInputFieldForEdit) {
-      xInputFieldForEdit.remove()
+    if (xtaskInput) {
+      xtaskInput.remove()
     }
     previousTaskElement.textContent = text
 
-    editIcon.src = EDIT_IMG_PATH
-    previousTaskElement.appendChild(editIcon)
+    previousEditIcon.src = EDIT_IMG_PATH
+    previousTaskElement.appendChild(previousEditIcon)
 
-    deleteButton.innerHTML = CLOSE_BUTTON_CODE
-    previousTaskElement.appendChild(deleteButton)
+    previousDeleteButton.innerHTML = CLOSE_BUTTON_CODE
+    previousTaskElement.appendChild(previousDeleteButton)
 
     previousTaskElement = taskElement
   }
 
-  if (xDeleteButton) {
-    xDeleteButton.remove()
+  if (taskDeleteBtn) {
+    taskDeleteBtn.remove()
   }
 
-  if (xEditIcon) {
-    xEditIcon.remove()
+  if (taskEditIcon) {
+    taskEditIcon.remove()
   }
 
   const newTask = taskElement.textContent
 
-  inputFieldForEdit.type = 'text'
-  inputFieldForEdit.id = 'task'
-  inputFieldForEdit.value = newTask
+  taskInput.type = 'text'
+  taskInput.id = 'task'
+  taskInput.value = newTask
   taskElement.innerHTML = ''
-  taskElement.appendChild(inputFieldForEdit)
-  deleteButton.innerHTML = CLOSE_BUTTON_CODE
-  taskElement.appendChild(deleteButton)
+  taskElement.appendChild(taskInput)
+  newdeleteBtn.innerHTML = CLOSE_BUTTON_CODE
+  taskElement.appendChild(newdeleteBtn)
   saveData()
 
   const task = document.getElementById('task')
   task.focus()
 
-  inputFieldForEdit.addEventListener('keyup', (event) => {
+  taskInput.addEventListener('keyup', (event) => {
     const newInputFieldDuringEdit = taskElement.querySelector('input')
     if (event.key === 'Enter') {
       const text = newInputFieldDuringEdit.value
@@ -121,16 +121,23 @@ function editTask (taskElement) {
           inbox.focus()
         }
 
-        editIcon.src = EDIT_IMG_PATH
-        taskElement.appendChild(editIcon)
+        newEditIcon.src = EDIT_IMG_PATH
+        taskElement.appendChild(newEditIcon)
 
-        deleteButton.innerHTML = CLOSE_BUTTON_CODE
-        taskElement.appendChild(deleteButton)
+        newdeleteBtn.innerHTML = CLOSE_BUTTON_CODE
+        taskElement.appendChild(newdeleteBtn)
 
         saveData()
       }
     }
   })
+}
+
+function createDeleteButton () {
+  const dltButton = document.createElement('button')
+  dltButton.innerHTML = CLOSE_BUTTON_CODE
+  dltButton.id = 'delete-' + Date.now()
+  return dltButton
 }
 function saveData () {
   localStorage.setItem(LOCAL_STORAGE_KEY, list.innerHTML)
